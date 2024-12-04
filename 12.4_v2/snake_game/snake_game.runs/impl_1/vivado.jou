@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Wed Dec  4 12:27:28 2024
+# Process ID: 12968
+# Current directory: X:/12.4_v2/snake_game/snake_game.runs/impl_1
+# Command line: vivado.exe -log snake_top.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source snake_top.tcl -notrace
+# Log file: X:/12.4_v2/snake_game/snake_game.runs/impl_1/snake_top.vdi
+# Journal file: X:/12.4_v2/snake_game/snake_game.runs/impl_1\vivado.jou
+# Running On: ENG23A-ECE02, OS: Windows, CPU Frequency: 2000 MHz, CPU Physical cores: 16, Host memory: 34359 MB
+#-----------------------------------------------------------
+source snake_top.tcl -notrace
