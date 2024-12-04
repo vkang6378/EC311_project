@@ -3,10 +3,10 @@
 module vga_controller(
     input clk,
     input reset,
-    input [3:0] move_dir, 
+    input [3:0] move_dir, s
     output reg h_sync,
     output reg v_sync,
-    output reg [2:0] color 
+    output reg [23:0] color 
 );
 
     // VGA Parameters
@@ -91,14 +91,14 @@ module vga_controller(
    
     always @(posedge clk) begin
         if (reset) begin
-            color <= 3'b000; 
+            color <= 24'h000000; 
         end else if (enable) begin
             if (snake_head) begin
-                color <= 3'b010; 
+                color <= 24'h06402B; 
             end else if (snake_body) begin
-                color <= 3'b011; 
+                color <= 24'h90ee90; 
             end else if (apple) begin
-                color <= 3'b100; 
+                color <= 24'hFF0000; 
             end else begin
                 color <= score_color; 
             end
