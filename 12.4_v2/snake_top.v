@@ -2,7 +2,8 @@ module snake_top (
     input wire clk,   
     input wire rst,   
     input wire [0:4] key,   
-    input wire PS2C,PS2D,   
+    input wire PS2C,PS2D, 
+    input wire [3:0] move,  
     output wire [0:7] led,   
     output wire hsync,vsync,  
     output wire [3:0] red,green,blue,  
@@ -52,6 +53,7 @@ module snake_top (
             .clr(clr),
             .PS2C(PS2C),
             .PS2D(PS2D),
+            .move(move),
             .kb_out(kb_out));
 
     scoring U6(.clk(clk),   
@@ -59,10 +61,5 @@ module snake_top (
             .seg_cs(seg_cs),
             .seg_data0(seg_data0));
 
-    word U7(.rom_addr(rom_addr),   
-            .M(M));
-
-    word1 U8(.rom_addr(rom_addr),   
-            .M1(M1));
 
 endmodule
