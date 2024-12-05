@@ -3,6 +3,7 @@ module keyboard(
     input wire clr,
     input wire PS2C,
     input wire PS2D,
+    input wire [3:0] move,
     output reg [2:0] kb_out
 );
 
@@ -76,7 +77,6 @@ module keyboard(
     
     assign xkey = {shift2[8:1],shift1[8:1]};
     
-    
    
     always@(posedge clk) begin   
     key_pass = xkey[7:0];
@@ -88,20 +88,17 @@ module keyboard(
         cnt_xd <= cnt_xd + 1;
     end
 
-
     always@(posedge clk) begin
-    if(cnt_xd == 0)
-        kb_out <= 0;
-    else if(cnt_xd == (xd - 21'b1))    
-        case(key_pass)     
-        8'h63: kb_out <= 1;    //↑
-        8'h60: kb_out <= 2;    //↓
-        8'h61: kb_out <= 3;    //←
-        8'h6a: kb_out <= 4;    //→
+ //    if(cnt_xd == (xd - 21'b1))    
+        case(move)     
+        5'b00001: kb_out <= 1;    //↑
+        5'b00010: kb_out <= 2;    //↓
+        5'b00100: kb_out <= 3;    //←
+        5'b01000: kb_out <= 4;    //→
         default : kb_out <= 0;
         endcase
-    else
-        kb_out <= 0;   
+ //   else
+  //      kb_out <= 0;   
     end
 
 endmodule
