@@ -457,17 +457,17 @@ module snake(
                 green = 4'b1111;
                 blue = 4'b1111; 
             end
-            2'd1 : begin   //绿色
+            2'd1 : begin   //green
                 red = 4'b0000;
                 green = 4'b1111;
                 blue = 4'b0000; 
             end
-            2'd2 : begin   //蓝色
+            2'd2 : begin   //blue
                 red = 4'b0000;
                 green = 4'b0000;
                 blue = 4'b1111; 
             end
-            2'd3 : begin   //红色
+            2'd3 : begin   //red
                 red = 4'b1111;
                 green = 4'b0000;
                 blue = 4'b0000; 
