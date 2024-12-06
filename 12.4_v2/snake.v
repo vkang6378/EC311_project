@@ -14,44 +14,44 @@ module snake(
     output reg [4:0] rom_addr
 );
 
-    parameter hbp = 10'b0010010000;       //行显示后沿，144（128+16）
-    parameter vbp = 10'b0000011111;       //场显示后延，31（2+29）
-    parameter h_begin = 100;   //蛇位置初始化行坐标
-    parameter v_begin = 300;   //蛇位置初始化场坐标
-    parameter h_diff = 100;    //难度选择色块行坐标
-    parameter v_diff = 240;    //难度选择色块场坐标
-    parameter h_lose = 256;   //游戏失败标语行坐标
-    parameter v_lose = 224;   //游戏失败标语场坐标
-    parameter h_start = 240;  //游戏初始化界面字体行坐标
-    parameter v_start = 134;  //游戏初始化界面字体场坐标
-    parameter pass_diff = 200;   //难度色块间隔
-    parameter length = 20;   //蛇身每一块大小（蛇为正方形）
+    parameter hbp = 10'b0010010000;      
+    parameter vbp = 10'b0000011111;       
+    parameter h_begin = 100;  
+    parameter v_begin = 300;   
+    parameter h_diff = 100;   
+    parameter v_diff = 240;   
+    parameter h_lose = 256;  
+    parameter v_lose = 224;   
+    parameter h_start = 240;  
+    parameter v_start = 134;  
+    parameter pass_diff = 200;   
+    parameter length = 20;   
 
-    reg [0:25] cnt_js = 0;   //运动计时
-    reg [0:23] speed;     //蛇的速度，值越小速度越快
-    reg [99:0] h_all = 0;   //蛇身所有的行坐标（十段）
-    reg [99:0] v_all = 0;   //蛇身所有的场坐标（十段）
-    reg [2:0] state = 0;    //游戏状态
-    reg [3:0] num = 4'd4;   //蛇身长度，初始为4
-    reg [4:0] rand_x,rand_y;   //随机数的行和场值
-    reg [9:0] food_x = 10'd300; //食物行坐标，初始化为300
-    reg [9:0] food_y = 10'd200; //食物场坐标坐标，初始化为200
-    reg [7:0] rom_pix;    //字体显示的位置指针
-    reg [1:0] color = 0;   //控制显示的颜色
-    reg [1:0] pos;    //方向系数
-    reg [1:0] diff;   //难度系数
-    reg [1:0] cs = 0; //用来修复无法解决的吃一次长两格的bug 
-    reg eat = 0;   //有没有迟到
-    reg DIR = 0;   //分频器，为1进行蛇身刷新
-    reg foodflag = 1;   //是否需要刷新食物
-    reg isbody = 0;    //当前刷新部位是否为蛇的身体
-    reg isfood = 0;    //当前刷新部位是否为食物
-    reg ishit = 0;    //蛇是否撞到了下和右墙或者身体
-    reg ishit1 = 0;   //蛇是否撞到了左和上墙或者身体
-    reg isword = 0;   //当前刷新部位是否为字体
-    reg R,G,B;        //用于字体刷新的三颜色
+    reg [0:25] cnt_js = 0;   
+    reg [0:23] speed;   
+    reg [99:0] h_all = 0;   
+    reg [99:0] v_all = 0;   
+    reg [2:0] state = 0;    
+    reg [3:0] num = 4'd4;   
+    reg [4:0] rand_x,rand_y;   
+    reg [9:0] food_x = 10'd300; 
+    reg [9:0] food_y = 10'd200; 
+    reg [7:0] rom_pix;    
+    reg [1:0] color = 0;   
+    reg [1:0] pos;   
+    reg [1:0] diff;   
+    reg [1:0] cs = 0; 
+    reg eat = 0;   
+    reg DIR = 0;   
+    reg foodflag = 1;  
+    reg isbody = 0;    
+    reg isfood = 0;    
+    reg ishit = 0;   
+    reg ishit1 = 0;   
+    reg isword = 0;  
+    reg R,G,B;        
     
-    always @(*) begin   //判断当前刷新像素位置是否为蛇身或者难度色块，其中判断里的num大于几非常重要
+    always @(*) begin   
     if((hc >= h_diff + hbp)&&(hc < hbp + h_diff + length)&&(vc >= v_diff + vbp)&&(vc < v_diff +vbp + length)&&(state == 0))
         begin isbody <= 1; color <= 1; end
     else if((hc >= h_diff + pass_diff + hbp)&&(hc < hbp + h_diff + pass_diff + length)&&(vc >= v_diff + vbp)&&(vc < v_diff +vbp + length)&&(state == 0))
@@ -109,7 +109,7 @@ module snake(
         ishit <= 0;    
     end
 
-    always @(posedge clk) begin   //消除吃一个长两格的bug模块
+    always @(posedge clk) begin  
     if((food_x == h_all[9:0]) && (food_y == v_all[9:0])&&(state == 2))
         cs <= cs + 1;
     else if(cs == 2)
@@ -117,35 +117,35 @@ module snake(
     else
         cs <= cs;
     end
-    //方向控制模块
+
     always @(posedge clk) begin
     if(!clr || state == 1)
-        pos <= 0;   //游戏初始化或复位置为0，即向左
+        pos <= 0;   
     else if(state != 0)
         case(kb_out)
             3'd1: begin
-                if(pos == 1)   //如果此时方向向下，不执行
+                if(pos == 1)   
                     pos <= pos;
                 else 
-                    pos <= 3;   //上
+                    pos <= 3;   
                 end
             3'd2: begin
-                if(pos == 3)   //如果此时方向向上，不执行
+                if(pos == 3)   
                     pos <= pos;
                 else 
-                    pos <= 1;   //下
+                    pos <= 1;   
                 end
             3'd3: begin
-                if(pos == 0)   //如果此时方向向左，不执行
+                if(pos == 0)   
                     pos <= pos;
                 else
-                    pos <= 2;   //右
+                    pos <= 2;  
                 end
             3'd4: begin
-                if(pos == 2)   //如果此时方向向右，不执行
+                if(pos == 2)   
                     pos <= pos;
                 else
-                    pos <= 0;   //左
+                    pos <= 0;   
                 end
             default: pos <= pos;
         endcase
@@ -154,11 +154,11 @@ module snake(
     end
 
     always @(posedge clk) begin
-    if((vidon == 1)&&(state == 2))   //只有状态为2才会计时
+    if((vidon == 1)&&(state == 2))   
     begin
-        if(cnt_js == speed)   //计数到速度的数值
+        if(cnt_js == speed)  
         begin
-            DIR <= 1;    //产生上升沿控制蛇身刷新
+            DIR <= 1;   
             cnt_js <= 0;
         end
         else
@@ -170,52 +170,52 @@ module snake(
     else if(state == 0)
         cnt_js <= 0;
     else
-        cnt_js <= cnt_js;   //这里很重要，不要将这些改写为cnt_js <= 0
+        cnt_js <= cnt_js;   
     end
 
 
-    always@(posedge clk) begin    //状态逻辑转化模块
-    if(!clr)   //复位将状态置零
+    always@(posedge clk) begin   
+    if(!clr)  
         state <= 0;
     else if(state == 0)
     begin
-        case (key_out)  //根据开发板上的按键选择对应的难度
-            3'd1 : begin diff <= 2; state <= 1; end   //困难
-            3'd5 : begin diff <= 1; state <= 1; end   //中等
-            3'd3 : begin diff <= 0; state <= 1; end   //简单
+        case (key_out)  
+            3'd1 : begin diff <= 2; state <= 1; end   
+            3'd5 : begin diff <= 1; state <= 1; end   
+            3'd3 : begin diff <= 0; state <= 1; end  
             default: state <= 0;
         endcase
     end
     else if(state == 1)
     begin
         state <= 2;
-        case (diff)   //根据难度去设置相应的速度
+        case (diff)   
             2'd0 : speed <= 24'd15000000;
             2'd1 : speed <= 24'd10000000;
             2'd2 : speed <= 24'd5000000;
             default: speed <= 24'd15000000;
         endcase        
     end
-    else if(state == 3 && key_out == 5)   //在状态3下按S2可以进行新一局的游戏
+    else if(state == 3 && key_out == 5)  
         state <= 0;
-    else if(ishit == 1 || ishit1 == 1)   //如果小蛇死亡，进入状态3，即游戏结束状态
+    else if(ishit == 1 || ishit1 == 1)   
         state <= 3;
-    else if(state == 2 && key_out == 5)  //如果处于游戏运行状态，按下S2可以暂停游戏
+    else if(state == 2 && key_out == 5)  
         state <= 4;
-    else if(state <= 4 && key_out == 5)  //如果处于游戏暂停状态，按下S2可以再开始游戏
+    else if(state <= 4 && key_out == 5) 
         state <= 2;
     else
-        state <= state;   //其他条件下state不变
+        state <= state;   
     end
 
-    always @(*) begin    //文字图像的刷新
-    if((hc >= h_lose + hbp)&&(hc < hbp + h_lose + 128)&&(vc >= v_lose + vbp)&&(vc < v_lose + vbp + 32)&&(state == 3))    //游戏结束字样
+    always @(*) begin    
+    if((hc >= h_lose + hbp)&&(hc < hbp + h_lose + 128)&&(vc >= v_lose + vbp)&&(vc < v_lose + vbp + 32)&&(state == 3))    
     begin
-        rom_addr <= vc - v_lose - vbp;   //得到此时的字符行数
-        rom_pix <= hc - h_lose - hbp;    //得到此时的字符列数
-        isword <= 1;    //表明当前位置是我们的字符像素
+        rom_addr <= vc - v_lose - vbp;  
+        rom_pix <= hc - h_lose - hbp;    
+        isword <= 1;   
     end
-    else if((hc >= h_start + hbp)&&(hc < hbp + h_start + 160)&&(vc >= v_start + vbp)&&(vc < v_start + vbp + 32)&&(state == 0))   //请选择难度字样
+    else if((hc >= h_start + hbp)&&(hc < hbp + h_start + 160)&&(vc >= v_start + vbp)&&(vc < v_start + vbp + 32)&&(state == 0))   
     begin
         rom_addr <= vc - v_start - vbp;
         rom_pix <= hc - h_start - hbp;
@@ -230,26 +230,19 @@ module snake(
     end
 
     
-    always @(posedge clk) begin   //计分模块
-    if(!clr || state <= 1)   //复位或者游戏初始化时将计分清零
+    always @(posedge clk) begin   
+    if(!clr || state <= 1)   
         score <= 0;
-    else if(cs == 2)  //小蛇吃到食物，计分+1
+    else if(cs == 2)  
         score <= score + 1;
     else
         score <= score;
     end
     
-    always @(posedge clk) begin  //led模块，没实际作用，用于当时工程的debug
-    case (state)
-        2'd1 : led <= 8'b10000000;
-        2'd2 : led <= 8'b11000000;
-        2'd3 : led <= 8'b11100000;
-        default: led <= 8'b11111000;
-    endcase
-    end
+ 
 
-    always @(posedge clk) begin    //蛇身刷新模块
-    if(!clr || state == 1)    //复位或游戏初始化进行身体的刷新，初始长度为4
+    always @(posedge clk) begin   
+    if(!clr || state == 1)    
     begin
         h_all[9:0] <= h_begin + length * 3;
         h_all[19:10] <= h_begin + length * 2;
@@ -262,11 +255,11 @@ module snake(
         v_all[9:0] <= v_begin;
         v_all[99:40] <= 60'd0;
     end
-    else if(cs == 2)   //吃到食物后
+    else if(cs == 2)  
     begin
-        case (pos)   //由于num的变化要相对滞后些，这里是将下一刻要展示的色块等于相邻色块的坐标
+        case (pos)   
             2'd0: begin
-                h_all[(num*10+9)-:10] <= h_all[(10*num-1)-:10] - length;   //往运动的方向进行刷新
+                h_all[(num*10+9)-:10] <= h_all[(10*num-1)-:10] - length;   
                 v_all[(num*10+9)-:10] <= v_all[(10*num-1)-:10];
             end
             2'd1: begin
@@ -283,9 +276,9 @@ module snake(
             end
         endcase      
     end
-    else if(DIR == 1)   //DIR上升沿，开始身体的刷新
+    else if(DIR == 1)  
     begin
-        if(num >= 10)   //首先根据num的值来决定刷新多少色块
+        if(num >= 10)   
         begin
             h_all[99:90] = h_all[89:80];
             v_all[99:90] = v_all[89:80];
@@ -330,19 +323,19 @@ module snake(
             h_all[19:10] = h_all[9:0];
             v_all[19:10] = v_all[9:0];
         end
-        case(pos)   //根据方向来决定下一时刻蛇头的位置
+        case(pos)  
         2'd0: h_all[9:0] <= h_all[9:0] + length;
         2'd1: v_all[9:0] <= v_all[9:0] + length;
         2'd2: begin
-            if(h_all[9:0] == 0)   //如果此时蛇头位于行边缘，且下一刻又往边缘方向继续走
-                ishit1 <= 1;   //判定为撞墙
+            if(h_all[9:0] == 0)  
+                ishit1 <= 1;  
             else
-            begin   //其他情况下进行正常身体刷新
+            begin  
                 h_all[9:0] <= h_all[9:0] - length;
                 ishit1 <= 0;
             end
         end
-        2'd3: begin   //同上
+        2'd3: begin  
             if(v_all[9:0] == 0)
                 ishit1 <= 1;
             else
@@ -361,7 +354,7 @@ module snake(
     end
     end
 
-    always @(*) begin    //判断食物的刷新位置是否和当前小蛇身体重叠，重叠就重新刷新位置
+    always @(*) begin    
     if((food_x == h_all[9:0]) && (food_y == v_all[9:0])&&(state == 2))
         eat <= 1;
     else if((food_x == h_all[19:10]) && (food_y == v_all[19:10])&&(num >= 2)&&(state == 2))
@@ -386,23 +379,22 @@ module snake(
         eat <= 0; 
     end
     
-    always @(posedge clk or negedge clr) begin   //身体成长模块
-    if(!clr || state == 1)   //复位或游戏初始化，身体长度置为4
+    always @(posedge clk or negedge clr) begin   
+    if(!clr || state == 1)  
         num = 4;   
-    else if(cs == 2)   //蛇迟到食物
+    else if(cs == 2)   
     begin
-        num = num + 1;   //身体长度+1
+        num = num + 1;   
         if(num == 11)  
-            num = 10;   //达到最大长度后，将不变
+            num = 10;   
         else
             num = num;
     end
     else
         num = num;
     end
-    //下面为随机数产生模块，原理是利用计数器来一直刷新rand_x和rand_y，当食物要刷新时取当前的rand_x和rand_y值
-    //由于我们说不定在哪一个时刻迟到食物，所以就产生了随机的效果
-    //x
+ 
+
     always@(posedge clk or negedge clr) begin 
     if (!clr)
         rand_x <= 0;
@@ -429,16 +421,16 @@ module snake(
         end
     end
 
-    always @(posedge clk) begin   //食物刷新模块
-    if(foodflag == 0)   //foodflag为0，表示食物需要进行刷新
+    always @(posedge clk) begin   
+    if(foodflag == 0)   
     begin
-        food_x <= rand_x * length;   //根据rand_x得到食物的行坐标
-        food_y <= rand_y * length;   //根据rand_y得到食物的场坐标
-        foodflag <= 1;   //刷新完后置1
+        food_x <= rand_x * length;  
+        food_y <= rand_y * length;  
+        foodflag <= 1;  
     end
-    else if(eat == 1)   //当食物和身体重叠
-        foodflag <= 0;   //置零，表示需要重新刷新食物
-    else   //其他情况下保持不变
+    else if(eat == 1)  
+        foodflag <= 0;   
+    else  
     begin
         foodflag <= foodflag;
         food_x <= food_x;
@@ -446,21 +438,21 @@ module snake(
     end   
     end
 
-    always @(*) begin    //食物像素刷新模块
+    always @(*) begin    
     if((hc >= food_x + hbp)&&(hc < hbp + food_x + length)&&(vc >= food_y + vbp)&&(vc < food_y +vbp + length)&&(state != 0))
-        isfood = 1;    //判断当前像素是否为食物的部分，是置一，否置零
+        isfood = 1;    
     else
         isfood = 0;
     end
 
-    always @(*) begin   //图像刷新模块
-    red = 0;   //这里三个置零起到消隐作用
+    always @(*) begin   
+    red = 0;   
     blue = 0;
     green = 0;
-    if(vidon == 1 && isbody == 1)   //如果此时为身体位置像素
+    if(vidon == 1 && isbody == 1)  
     begin
-        case (color)   //根据color值去刷新不同的颜色
-            2'd0 : begin   //白色
+        case (color)   
+            2'd0 : begin   
                 red = 4'b1111;
                 green = 4'b1111;
                 blue = 4'b1111; 
@@ -487,15 +479,15 @@ module snake(
             end
         endcase
     end
-    else if(vidon && isfood == 1)   //如果此时为食物位置像素
+    else if(vidon && isfood == 1)  
     begin
         red = 4'b0000;
-        green = 4'b1111;   //食物为绿色
+        green = 4'b1111;   
         blue = 4'b0000;
     end
-    else if(vidon == 1 && isword == 1)   ////如果此时为文字位置像素
+    else if(vidon == 1 && isword == 1)   
     begin
-        if(state == 3)   //状态3的文字为“游戏结束”，保存在M寄存器里
+        if(state == 3)   
         begin
             R = M[rom_pix];
             G = M[rom_pix];
@@ -504,7 +496,7 @@ module snake(
             green = {G,G,G,G};
             blue = {B,B,B,B};
         end 
-        else  //状态0的文字为“请选择难度”，保存在M1寄存器里
+        else  
         begin
             R = M1[rom_pix];
             G = M1[rom_pix];
