@@ -8,12 +8,12 @@ module vga (
     output reg vidon
 );
 
-    parameter hpixels = 10'b1100100000;    //行像素点，800
-    parameter vlines = 10'b1000001001;    //行数，521
-    parameter hbp = 10'b0010010000;       //行显示后沿，144（128+16）
-    parameter hfp = 10'b1100010000;       //行显示前沿784（128+16+640）
-    parameter vbp = 10'b0000011111;       //场显示后延，31（2+29）
-    parameter vfp = 10'b0111111111;       //场显示前沿，511（2+29+480）
+    parameter hpixels = 10'b1100100000;    
+    parameter vlines = 10'b1000001001;    
+    parameter hbp = 10'b0010010000;      
+    parameter hfp = 10'b1100010000;     
+    parameter vbp = 10'b0000011111;    
+    parameter vfp = 10'b0111111111;      
     
     reg vsenable;
 
