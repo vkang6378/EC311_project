@@ -30,7 +30,7 @@ module keyin (
         5'b00100: key_out <= 5;   
         endcase
     else
-       key_out <= 0;   //0表示无按键按下
+       key_out <= 0;   //cannot be pressed
     end
 
 endmodule
