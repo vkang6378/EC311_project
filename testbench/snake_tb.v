@@ -54,12 +54,11 @@ module snake_tb;
 
         #100 hc = 300; vc = 200; key_out = 3'd1; kb_out = 3'd2; 
         #1000 hc = 400; vc = 300; key_out = 3'd4; kb_out = 3'd3; 
-        #500 key_out = 3'd0; kb_out = 3'd0; // Reset input
+        #500 key_out = 3'd0; kb_out = 3'd0; 
 
         #2000 clr = 0; 
         #100 clr = 1;  
 
-        // End simulation
         #10000 $finish;
     end
 
