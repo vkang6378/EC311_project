@@ -1,19 +1,16 @@
 `timescale 1ns/1ps
 
 module keyboard_tb;
-    // Testbench signals
-    reg clk;                  // Input clock
-    reg [3:0] move;           // Move input
-    wire [2:0] kb_out;        // Keyboard output
+    reg clk;                  
+    reg [3:0] move;          
+    wire [2:0] kb_out;       
 
-    // Instantiate the module under test
     keyboard uut (
         .clk(clk),
         .move(move),
         .kb_out(kb_out)
     );
 
-    // Clock generation
     initial begin
         clk = 0;
         forever #10 clk = ~clk; 
