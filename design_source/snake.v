@@ -50,7 +50,8 @@ module snake(
     reg ishit1 = 0;   
     reg isword = 0;  
     reg R,G,B;        
-    
+
+    //check for snake's body(vga)
     always @(*) begin   
     if((hc >= h_diff + hbp)&&(hc < hbp + h_diff + length)&&(vc >= v_diff + vbp)&&(vc < v_diff +vbp + length)&&(state == 0))
         begin isbody <= 1; color <= 1; end
@@ -84,6 +85,7 @@ module snake(
         color <= color;
     end
     end
+    //check for collision
     always @(*) begin
     if((h_all[9:0] == h_all[19:10])&&(v_all[9:0] == v_all[19:10])&&(state == 2)&&(num >= 2))
         ishit <= 1;
@@ -109,6 +111,7 @@ module snake(
         ishit <= 0;    
     end
 
+    //eating food
     always @(posedge clk) begin  
     if((food_x == h_all[9:0]) && (food_y == v_all[9:0])&&(state == 2))
         cs <= cs + 1;
@@ -118,6 +121,7 @@ module snake(
         cs <= cs;
     end
 
+    //snake direction
     always @(posedge clk) begin
     if(!clr || state == 1)
         pos <= 0;   
@@ -153,6 +157,7 @@ module snake(
         pos <= pos;   
     end
 
+    //snake speed(move)
     always @(posedge clk) begin
     if((vidon == 1)&&(state == 2))   
     begin
@@ -173,7 +178,7 @@ module snake(
         cnt_js <= cnt_js;   
     end
 
-
+    //determine speed
     always@(posedge clk) begin   
     if(!clr)  
         state <= 0;
@@ -229,7 +234,7 @@ module snake(
     end
     end
 
-    
+    //score tracking
     always @(posedge clk) begin   
     if(!clr || state <= 1)   
         score <= 0;
@@ -240,7 +245,7 @@ module snake(
     end
     
  
-
+    //snake update
     always @(posedge clk) begin   
     if(!clr || state == 1)    
     begin
@@ -354,6 +359,7 @@ module snake(
     end
     end
 
+    //food eatten
     always @(*) begin    
     if((food_x == h_all[9:0]) && (food_y == v_all[9:0])&&(state == 2))
         eat <= 1;
@@ -378,7 +384,8 @@ module snake(
     else
         eat <= 0; 
     end
-    
+
+    //length
     always @(posedge clk or negedge clr) begin   
     if(!clr || state == 1)  
         num = 4;   
@@ -394,7 +401,7 @@ module snake(
         num = num;
     end
  
-
+    //kinda random num generater(food)
     always@(posedge clk or negedge clr) begin 
     if (!clr)
         rand_x <= 0;
@@ -421,6 +428,7 @@ module snake(
         end
     end
 
+    //food placement
     always @(posedge clk) begin   
     if(foodflag == 0)   
     begin
@@ -438,6 +446,7 @@ module snake(
     end   
     end
 
+    //food(vga)
     always @(*) begin    
     if((hc >= food_x + hbp)&&(hc < hbp + food_x + length)&&(vc >= food_y + vbp)&&(vc < food_y +vbp + length)&&(state != 0))
         isfood = 1;    
@@ -445,6 +454,7 @@ module snake(
         isfood = 0;
     end
 
+    
     always @(*) begin   
     red = 0;   
     blue = 0;
