@@ -8,7 +8,7 @@ module keyin (
 
     reg [0:20] cnt_xd = 0;    
 
-
+    //debouncer
     always@(posedge clk) begin    
     if(key == 5'b00000)   
         cnt_xd <= 0;
@@ -18,6 +18,7 @@ module keyin (
         cnt_xd <= cnt_xd + 1;
     end
 
+    
     always@(posedge clk) begin
     if(cnt_xd == 0)
         key_out <= 0;
